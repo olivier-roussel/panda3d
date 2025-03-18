@@ -2500,7 +2500,11 @@ def SdkLocateMacOSX(osxtarget = None, archs = []):
         else:
             sdkname = "MacOSX%d.%d" % osxtarget
 
-        if (os.path.exists("/Library/Developer/CommandLineTools/SDKs/%s.sdk" % sdkname)):
+        sdk_root_conda_build = os.environ.get('OSX_SDK_DIR')
+        if sdk_root_conda_build:
+            SDK["MACOSX"] = "%s/%s.sdk" % (sdk_root_conda_build, sdkname)
+            print("============== SDK[MACOSX]=", SDK["MACOSX"])
+        elif (os.path.exists("/Library/Developer/CommandLineTools/SDKs/%s.sdk" % sdkname)):
             SDK["MACOSX"] = "/Library/Developer/CommandLineTools/SDKs/%s.sdk" % sdkname
         elif (os.path.exists("/Developer/SDKs/%su.sdk" % sdkname)):
             SDK["MACOSX"] = "/Developer/SDKs/%su.sdk" % sdkname
