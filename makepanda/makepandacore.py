@@ -28,7 +28,7 @@ MAINTHREAD = threading.current_thread()
 OUTPUTDIR = "built"
 CUSTOM_OUTPUTDIR = False
 THIRDPARTYBASE = None
-THIRDPARTYDIR = os.environ['PREFIX'] + '/'
+THIRDPARTYDIR = None
 OPTIMIZE = "3"
 VERBOSE = False
 LINK_ALL_STATIC = False
@@ -337,7 +337,7 @@ def GetHostArch():
     """Returns the architecture we're compiling on.
     Its value is also platform-dependent, as different platforms
     have different architecture naming."""
-    return 'x86_64' # when cross-compiling, conda python is faking the target environment, so platform.machine() would returns an incorrect host arch
+
     target = GetTarget()
     if target == 'windows':
         return 'x64' if host_64 else 'x86'
@@ -483,7 +483,7 @@ def GetTargetArch():
 
 def CrossCompiling():
     """Returns True if we're cross-compiling."""
-    return True
+    return GetTarget() != GetHost()
 
 def GetCC():
     if TARGET in ('darwin', 'freebsd', 'android'):
@@ -2231,7 +2231,7 @@ def SdkLocatePython(prefer_thirdparty_python=False):
             Warn("running makepanda with Python %s, but building Panda3D with Python %s." % (running_ver, ver))
 
     elif CrossCompiling() or (prefer_thirdparty_python and os.path.isdir(os.path.join(GetThirdpartyDir(), "python"))):
-        tp_python = GetThirdpartyDir()
+        tp_python = os.path.join(GetThirdpartyDir(), "python")
 
         if GetTarget() == 'darwin':
             py_libs = glob.glob(tp_python + "/lib/libpython[0-9].[0-9].dylib") + \
