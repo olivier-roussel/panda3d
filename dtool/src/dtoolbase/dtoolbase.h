@@ -504,15 +504,15 @@ typedef struct _object PyObject;
 #if defined(CPPPARSER) || defined(LINK_ALL_STATIC)
 #define EXPORT_TEMPL
 #define IMPORT_TEMPL
-#elif defined(_MSC_VER)
-/* Nowadays, we'd define both of these as "extern" in all cases, so that
-   the header file always marks the symbol as "extern" and the .cxx file
-   explicitly instantiates it.  However, MSVC versions before 2013 break
-   the spec by explicitly disallowing it, so we have to instantiate the
-   class from the header file.  Fortunately, its linker is okay with the
-   duplicate template instantiations that this causes. */
-#define EXPORT_TEMPL
-#define IMPORT_TEMPL extern
+// #elif defined(_MSC_VER)
+// /* Nowadays, we'd define both of these as "extern" in all cases, so that
+//    the header file always marks the symbol as "extern" and the .cxx file
+//    explicitly instantiates it.  However, MSVC versions before 2013 break
+//    the spec by explicitly disallowing it, so we have to instantiate the
+//    class from the header file.  Fortunately, its linker is okay with the
+//    duplicate template instantiations that this causes. */
+// #define EXPORT_TEMPL
+// #define IMPORT_TEMPL extern
 #else
 #define EXPORT_TEMPL extern
 #define IMPORT_TEMPL extern

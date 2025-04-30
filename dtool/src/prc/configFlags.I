@@ -16,7 +16,7 @@
  * comparison of the supplied local_modified value with the global_modified
  * value).
  */
-ALWAYS_INLINE bool ConfigFlags::
+INLINE bool ConfigFlags::
 is_cache_valid(AtomicAdjust::Integer local_modified) {
   return local_modified == _global_modified;
 }
