@@ -3575,8 +3575,9 @@ ConditionalWriteFile(GetOutputDir()+'/include/ctl3d.h', '/* dummy file to make M
 
 # Since Eigen is included by all sorts of core headers, as a convenience
 # to C++ users on Win and Mac, we include it in the Panda include directory.
-if not PkgSkip("EIGEN") and GetTarget() in ("windows", "darwin") and GetThirdpartyDir():
-    CopyTree(GetOutputDir()+'/include/Eigen', GetThirdpartyDir()+'eigen/include/Eigen')
+# We disable this to force using Eigen from custom location (installed by conda)
+#if not PkgSkip("EIGEN") and GetTarget() in ("windows", "darwin") and GetThirdpartyDir():
+#    CopyTree(GetOutputDir()+'/include/Eigen', GetThirdpartyDir()+'eigen/include/Eigen')
 
 ########################################################################
 #

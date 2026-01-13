@@ -61,8 +61,8 @@ default-directnotify-level warning
 # particular Config.prc file.
 
 model-path    $MAIN_DIR
-model-path    $THIS_PRC_DIR/..
-model-path    $THIS_PRC_DIR/../models
+model-path    $THIS_PRC_DIR/../../share/panda3d
+model-path    $THIS_PRC_DIR/../../share/panda3d/models
 
 # This enable the automatic creation of a TK window when running
 # Direct.

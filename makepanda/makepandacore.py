@@ -2175,7 +2175,13 @@ def SdkLocatePython(prefer_thirdparty_python=False):
 
     abiflags = getattr(sys, 'abiflags', '')
 
-    if GetTarget() == 'windows':
+    isCondaBuild = 'PREFIX' in os.environ
+    if GetTarget() == 'windows' and isCondaBuild:
+        # If building under a conda-build env, then use the python provided by conda
+        SDK["PYTHON"] = os.environ['PREFIX']
+        SDK["PYTHONEXEC"] = os.environ['PREFIX'] + "/python.exe"
+        SDK["PYTHONVERSION"] = "python" + '{0[0]}.{0[1]}'.format(sys.version_info)
+    elif GetTarget() == 'windows' and not isCondaBuild:
         sdkdir = GetThirdpartyBase() + "/win-python"
 
         if sys.version_info >= (3, 0):
@@ -2500,7 +2506,11 @@ def SdkLocateMacOSX(osxtarget = None, archs = []):
         else:
             sdkname = "MacOSX%d.%d" % osxtarget
 
-        if (os.path.exists("/Library/Developer/CommandLineTools/SDKs/%s.sdk" % sdkname)):
+        sdk_root_conda_build = os.environ.get('OSX_SDK_DIR')
+        if sdk_root_conda_build:
+            SDK["MACOSX"] = "%s/%s.sdk" % (sdk_root_conda_build, sdkname)
+            print("============== SDK[MACOSX]=", SDK["MACOSX"])
+        elif (os.path.exists("/Library/Developer/CommandLineTools/SDKs/%s.sdk" % sdkname)):
             SDK["MACOSX"] = "/Library/Developer/CommandLineTools/SDKs/%s.sdk" % sdkname
         elif (os.path.exists("/Developer/SDKs/%su.sdk" % sdkname)):
             SDK["MACOSX"] = "/Developer/SDKs/%su.sdk" % sdkname
