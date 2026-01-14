@@ -1791,12 +1791,12 @@ def CompileIgate(woutd,wsrc,opts):
         ConditionalWriteFile(woutd, "")
         return
 
-    if not CrossCompiling():
+    if not CrossCompiling() and GetHostArch() == GetTargetArch():
         # If we're compiling for this platform, we can use the one we've built.
         cmd = os.path.join(GetOutputDir(), 'bin', 'interrogate')
     else:
-        # Assume that interrogate is on the PATH somewhere.
-        cmd = 'interrogate'
+        # Assume that interrogate is already build on host and provided by this env var
+        cmd = os.environ.get('PANDA3D_INTERROGATE')
 
     if GetVerbose():
         cmd += ' -v'
@@ -1874,12 +1874,12 @@ def CompileImod(wobj, wsrc, opts):
         CompileCxx(wobj, woutc, opts)
         return
 
-    if not CrossCompiling():
+    if not CrossCompiling() and GetHostArch() == GetTargetArch():
         # If we're compiling for this platform, we can use the one we've built.
         cmd = os.path.join(GetOutputDir(), 'bin', 'interrogate_module')
     else:
-        # Assume that interrogate_module is on the PATH somewhere.
-        cmd = 'interrogate_module'
+        # Assume that interrogate_module is already build on host and provided by this env var
+        cmd = os.environ.get('PANDA3D_INTERROGATE_MODULE')
 
     cmd += ' -oc ' + woutc + ' -module ' + module + ' -library ' + library + ' -python-native'
     importmod = GetValueOption(opts, "IMPORT:")
@@ -2200,11 +2200,11 @@ def CompileEgg(eggfile, src, opts):
         eggfile = eggfile[:-3]
 
     # Determine the location of the pzip and flt2egg tools.
-    if CrossCompiling():
+    if CrossCompiling() or GetHostArch() != GetTargetArch():
         # We may not be able to use our generated versions of these tools,
-        # so we'll expect them to already be present in the PATH.
-        pzip = 'pzip'
-        flt2egg = 'flt2egg'
+        # so we use pre-compiled veersion of these on host through these env vars
+        pzip = os.environ.get('PANDA3D_PZIP')
+        flt2egg = os.environ.get('PANDA3D_FLT2EGG')
     else:
         # If we're compiling for this machine, we can use the binaries we've built.
         pzip = os.path.join(GetOutputDir(), 'bin', 'pzip')
